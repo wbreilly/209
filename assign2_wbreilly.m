@@ -98,16 +98,6 @@ birthday = [5 30 1992];
 helper = {': '};
 name_birth = strcat(full_name, helper, num2str(birthday));
 
-%%
-% 1.	Print your name and birthday to the command window using fprintf()....
-%     Don't just use fprintf to print the string you created in Step 5. ...
-% Rather, use fprintf with a format string that specifies the printing ...
-%     of each individual variable.
-
-% Couldn't figure out fprintf, but ...
-disp(name_birth)
-
-
 
 
 
