@@ -87,9 +87,9 @@ NewScore = Score;
 
 % loop through all scores
 for iscore = 1:nloops
-    % if same row in mask is true, multiple by trial
+    % if true, 
     if even_sub_mask(iscore) == 1
-        NewScore(iscore) = NewScore(iscore) * Trial(iscore);
+        NewScore(iscore) = NewScore(iscore)*Trial(iscore);
     end
 end
 
