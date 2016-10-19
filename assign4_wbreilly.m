@@ -108,16 +108,20 @@ end
 % The headerless version is called "txtdata_subnum_nohd_v2.txt" which ...
 % you should use if you do not have access to the tdfread() function or...
 % don't want to use the readtable() function.
+
+fname = sprintf('Users/wbr/walter/209_matlab/txtdata_subnum_v2.txt');
+tdfread(fname);
+
 % Your code should print the following information to the Matlab command...
 % window:
 % 1. The number of subjects in the dataset (1 pt)
-
+fprintf('# of subjects: %d \n', size(unique(Subject),1))
 
 % 2. The number of conditions in the data set (1 pt)
-
+fprintf('# of conditions: %d \n', size(unique(Condition),1))
 
 % 3. The number of factors in the data set (1 pt)
-
+fprintf('# of factors: %d \n \n', size(unique(Factor),1))
 
 % 4. A tab-delimited table specifying the number of trials for each subject...
 % in each Factor/Condition combination (see example output below). (3 pts)
@@ -127,18 +131,62 @@ end
 %       2. When generating your subject ID, you have to append the subject ID...
 %       number to the word Sub. Note that for subjects, 5, 6, 8 and 9, the...
 %       output is Sub05, Sub06, etc. Use the fprintf() help to figure out how...
-%       to use an arbitrary number of digits when printing an integer, e.g. 01,...
+%       to use an arbitrary number of ;digits when printing an integer, e.g. 01,...
 %       001, or 0001, etc.
+
+%create a table
+exp = table(Subject, Condition, Factor,Score, 'VariableNames',...
+    {'Sub','Con','Fac','Sco'});
+
+% count instances of every cond-factor pair
+summary = grpstats(exp, [1 3 2]);
+
+% unique subjects
+u_subs = unique(Subject);
+
+%number subjects
+n_subs = size(u_subs,1);
+
+%get just the counts, convert to array, and shape in a matrix such that...
+% each row represents a unique subject's data
+counts = reshape(table2array(summary(:,4)),4,n_subs(1))';
+
+% add subject #s to summary matrix
+exp_counts = [u_subs counts];
+
+% tell em what's comin
+fprintf('Trial Counts \n\n')
+
+% print table labels
+fprintf('  Subject \tF1C1 \tF1C2 \tF2C1 \tF2C2 \n')
+%loop through exp_sum and print the pertinent values
+for isum = 1:n_subs
+    fprintf('Subject ID: %02d \t%d\t%d\t%d\t%d \n', ...
+        exp_counts(isum,1),exp_counts(isum,2),exp_counts(isum,3),exp_counts(isum,4),...
+        exp_counts(isum,5))
+end
 
 
 % 5. A tab-delimited table specifying the mean score for each subject in ...
 %   each Factor/Condition combination. (1 pt)
 
+% get the means with same method as for counts
+means = reshape(table2array(summary(:,5)),4,n_subs(1))';
 
+% add subject #s to summary matrix
+exp_means = [u_subs means];
 
+% tell em what's comin
+fprintf('\nCondition-Factor Means \n\n')
 
-
-
+% print table labels
+fprintf('  Subject \tF1C1 \tF1C2 \tF2C1 \tF2C2 \n')
+%loop through exp_sum and print the pertinent values
+for isum = 1:n_subs
+    fprintf('Subject ID: %02d \t%.2f\t%.2f\t%.2f\t%.2f \n', ...
+        exp_means(isum,1),exp_means(isum,2),exp_means(isum,3),...
+        exp_means(isum,4), exp_means(isum,5))
+end
 
 
 
