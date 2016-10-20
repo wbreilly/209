@@ -85,6 +85,13 @@ nloops = size(Score,1);
 % put yer data here
 NewScore = Score;
 
+%
+% since i made the mask, didnt need the below forloop...
+% even_sub_mask = logical(even_sub_mask);
+% NewScore2 = NewScore;
+% 
+% NewScore2(even_sub_mask) = NewScore(even_sub_mask) .* Trial(even_sub_mask);
+
 % loop through all scores
 for iscore = 1:nloops
     % if same row in mask is true, multiple by trial
@@ -167,6 +174,7 @@ for isum = 1:n_subs
 end
 
 
+
 % 5. A tab-delimited table specifying the mean score for each subject in ...
 %   each Factor/Condition combination. (1 pt)
 
@@ -187,6 +195,28 @@ for isum = 1:n_subs
         exp_means(isum,1),exp_means(isum,2),exp_means(isum,3),...
         exp_means(isum,4), exp_means(isum,5))
 end
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
