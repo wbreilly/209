@@ -42,7 +42,7 @@ u_con = unique(Condition);
 n_con = length(u_con);
 
 % print the number of conditions
-fprintf('# conditions: %d \n\n', n_con)
+fprintf('\n # conditions: %d \n\n', n_con)
 
 % print the unique subject numbers
 fprintf(' Conditions \n') % header
@@ -57,7 +57,7 @@ u_fac = unique(Factor);
 n_fac = length(u_fac);
 
 % print the number of factors
-fprintf('# factors: %d \n\n', n_fac)
+fprintf('\n # factors: %d \n\n', n_fac)
 
 % print the unique subject numbers
 fprintf(' Factors \n') % header
@@ -78,6 +78,10 @@ for isub = 1:n_sub
     cur_sub = u_sub(isub);
     sub_mask = Subject == cur_sub;
     
+     % Print subject ID info
+    cursub_id = sprintf('Sub%02d', cur_sub);
+    fprintf('%s', cursub_id);
+    
     for ifac = 1:n_fac
         cur_fac = u_fac(ifac);
         fac_mask = Factor == cur_fac;
@@ -85,6 +89,15 @@ for isub = 1:n_sub
         for icon = 1:n_con
             cur_con = u_con(icon);
             con_mask = Condition == cur_con;
+            
+            % create composite mask
+            comp_mask = sub_mask & fac_mask & con_mask;
+            
+            % sum trials
+            num_trials = sum(comp_mask);
+            
+            % print the trial number
+            fprintf('\t%d \n', num_trials);
             
         end % end icon
     end % end ifac
