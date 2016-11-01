@@ -138,6 +138,25 @@ legend('Factor 1', 'Factor 2', 'location', 'northwest');
 %     "non-contiguous" subjects (1 pt) and a list of those subject IDs..
 % 
 
+%put non contigous subject id's here
+noncont_subs = [];
+
+for isub = 1:n_sub % loop through subjects
+cur_sub = u_sub(isub);
+sub_mask = Subject == cur_sub;
+diff_mask = diff(sub_mask);
+abs_diff = abs(diff_mask);
+sum_diff = sum(abs_diff);
+    if sum_diff  > 2
+        noncont_subs = [noncont_subs cur_sub];
+    end
+end
+
+% n non cont subs
+fprintf('\n\nFound %d Subjects with Non-Cont Rows\n\n', length(noncont_subs))
+% ids
+fprintf('Subject %02d has Non-Cont Rows!!\n', noncont_subs)
+    
 
 %% (1 pt).   Hint: As with the previous homework assignments, there are a ...
 %     couple of different ways of solving this problem. One way is to loop ...
