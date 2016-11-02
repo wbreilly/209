@@ -143,14 +143,18 @@ noncont_subs = [];
 
 for isub = 1:n_sub % loop through subjects
 cur_sub = u_sub(isub);
+% mask for the cur sub
 sub_mask = Subject == cur_sub;
+% take the diff of the mask
 diff_mask = diff(sub_mask);
+% get the abs
 abs_diff = abs(diff_mask);
+% sum it up
 sum_diff = sum(abs_diff);
     if sum_diff  > 2
         noncont_subs = [noncont_subs cur_sub];
-    end
-end
+    end % end if
+end % end isub
 
 % n non cont subs
 fprintf('\n\nFound %d Subjects with Non-Cont Rows\n\n', length(noncont_subs))
@@ -175,3 +179,139 @@ fprintf('Subject %02d has Non-Cont Rows!!\n', noncont_subs)
 %     headings as what we?ve been using. Generate a bar graph like the one...
 %     shown above (but with your modified data, which will make the means...
 %     look different). (2 pts)
+
+% modified copy from above. Subject modified to exclude subjects with ...
+% non-cont rows 
+
+% initiate
+noncont_mask = [];
+% create matrix where noncont subs have a 1 
+for j = 1:length(noncont_subs)
+    cur_mask = u_sub == noncont_subs(j);
+    noncont_mask = [cur_mask  noncont_mask];
+end
+% final non cont mask
+noncont_mask = sum(noncont_mask,2);
+
+% cont mask
+cont_mask = ~noncont_mask;
+
+% cont subs
+cont_subs = u_sub(cont_mask);
+% n cont subs
+n_cont_subs = size(cont_subs);
+
+% factor/con scores here 
+tbl2 = [];
+
+% loop d loops
+for isub = 1:n_cont_subs
+    cur_sub = cont_subs(isub);
+    sub_mask = Subject == cur_sub;
+    
+    for ifac = 1:n_fac
+        cur_fac = u_fac(ifac);
+        fac_mask = Factor == cur_fac;
+        
+        for icon = 1:n_con
+            cur_con = u_con(icon);
+            con_mask = Condition == cur_con;
+            
+            % create composite mask
+            comp_mask = sub_mask & fac_mask & con_mask;
+            
+            % sum trials
+            num_trials = sum(comp_mask);
+            
+            % get scores
+            cur_score = Score(comp_mask);
+            
+            if num_trials == 0
+                % update table
+                tbl2 = [tbl2 NaN];
+            else
+                % update table
+                tbl2 = [tbl2 cur_score];
+            end
+            
+        end % end icon
+    end % end ifac
+end % end isub
+
+% tell em what's coming
+fprintf('\nSummary Table SaNs Non-Cont Subjects\n\n')
+
+
+% number of factor condition combos
+n_ttypes = n_fac * n_con;
+% reshape table from column vector to subject by trial type matrix
+tbl2 = reshape(tbl2, n_ttypes(1), n_cont_subs(1))';
+
+% where will you put across subject means and SEMS
+sum_stats = zeros(2,n_ttypes); 
+
+% calculate mean and sem across subjects
+for itype = 1:n_ttypes
+    % means after removing NaNs
+    sum_stats(1,itype) = nanmean(tbl2(:,itype));
+    % sem after removing NaNs
+    sum_stats(2,itype) = nanstd(tbl2(:,itype));
+end % itype
+
+% create header
+h_line = create_hdrline(n_fac, n_con);
+%print the header
+fprintf('\t%s', h_line)
+
+% print the means
+fprintf('\nMeans\t')
+for itype = 1:n_ttypes
+    fprintf('%.3f\t', sum_stats(1,itype));
+end
+
+% print the SDs
+fprintf('\nSDs\t')
+for itype = 1:n_ttypes
+    fprintf('%.3f\t', sum_stats(2,itype));
+end
+
+%% creat bar graph
+
+% get the means
+bar_means = sum_stats(1,:);
+% shape em up
+bar_means = reshape(bar_means, n_con, n_fac);
+
+% open a figure
+figure;
+
+% plot the bars
+bar(bar_means)
+
+% add labels
+xlabel('Condition');
+ylabel('Means');
+title('Means by Factor and Condition (Cont Rows Data Only)');
+legend('Factor 1', 'Factor 2', 'location', 'northwest');
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
