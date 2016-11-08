@@ -1,3 +1,5 @@
+% Walter Reilly
+% 11_8_16
 % assign7.m
 %
 % Debug this file.  There are 9 bugs.
@@ -14,7 +16,7 @@ end
 ages = [33 25 31 28 33 30 32 29 28 26]; % ages of subjects
 
 % Add the vector of ages
-subinfo{:,2} = num2cell(ages');  
+subinfo{:,2} = num2cell('ages'); % bug 1, missing ' 
 
 % Calculate the average age
 mean_age = mean(subinfo{:,2});
